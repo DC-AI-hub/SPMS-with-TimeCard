@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { TimecardProvider } from './contexts/TimecardContext';
@@ -9,7 +9,7 @@ import TimecardDetailsPage from './pages/TimecardDetailsPage';
 import ThemeContext from './contexts/ThemeContext';
 
 function App() {
-  const { toggleTheme } = React.useContext(ThemeContext);
+  const { toggleTheme } = useContext(ThemeContext);
   return (
     <Router>
       <AppBar position="static">
@@ -21,7 +21,7 @@ function App() {
             <Button color="inherit" component={Link} to="/">Timecard</Button>
             <Button color="inherit" component={Link} to="/history">History</Button>
           </nav>
-          <Button color="inherit" onClick={toggleTheme}>Toggle Theme</Button>
+          <Button color="inherit" onClick={toggleTheme} id="theme-toggle-button">Toggle Theme</Button>
         </Toolbar>
       </AppBar>
       <main>

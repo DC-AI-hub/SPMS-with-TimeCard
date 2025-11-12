@@ -4,10 +4,8 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import SendIcon from '@mui/icons-material/Send';
 
 const calendarData = [
-  // Mock data representing the days of the month.
-  // A more robust implementation would use a date library.
   { day: 1, entry: 'FR-009: 8h', status: 'normal' },
-  { day: 2, status: 'holiday', holidayName: 'Holiday' },
+  { day: 2, status: 'holiday' },
   { day: 3, status: 'holiday' },
   { day: 4, status: 'normal' },
   { day: 5, status: 'normal' },
@@ -39,49 +37,47 @@ const calendarData = [
 ];
 
 const Day = ({ dayInfo, onClick }) => {
-  let backgroundColor = 'background.paper';
-  let color = 'text.primary';
+  let backgroundColor = 'transparent';
   if (dayInfo.status === 'holiday') {
-    backgroundColor = 'success.light';
-    color = 'success.dark';
+    backgroundColor = 'success.main';
   } else if (dayInfo.status === 'error') {
-    backgroundColor = 'error.light';
-    color = 'error.dark';
+    backgroundColor = 'error.main';
   } else if (dayInfo.status === 'warning') {
-    backgroundColor = 'warning.light';
-    color = 'warning.dark';
+    backgroundColor = 'warning.main';
   }
 
   return (
     <Box
       onClick={onClick}
       sx={{
-        height: 120,
+        height: '100%',
         p: 1,
-        border: '1px solid #e0e0e0',
         backgroundColor,
-        color,
+        color: 'text.primary',
         cursor: 'pointer',
+        border: '1px solid #334155',
         '&:hover': {
           backgroundColor: 'action.hover'
-        }
+        },
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
       }}
     >
       <Typography variant="body2" sx={{ fontWeight: 'medium' }}>{dayInfo.day}</Typography>
-      {dayInfo.entry && <Typography variant="caption">{dayInfo.entry}</Typography>}
-      {dayInfo.holidayName && <Typography variant="caption" sx={{ position: 'absolute', bottom: 8, left: 8 }}>{dayInfo.holidayName}</Typography>}
+      {dayInfo.entry && <Typography variant="caption" sx={{ alignSelf: 'flex-end' }}>{dayInfo.entry}</Typography>}
     </Box>
   );
 };
 
 const TimecardCalendar = ({ onDayClick, onBatchAddClick }) => {
   return (
-    <Paper elevation={1} sx={{ p: 2, borderRadius: '10px', border: '1px solid #e0e0e0' }}>
+    <Paper elevation={0} sx={{ p: 3, borderRadius: '10px', backgroundColor: 'background.paper', border: '1px solid #334155' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Box>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-            <CalendarMonthIcon color="primary" sx={{ mr: 1 }} />
-            <Typography variant="h6" component="h2">
+            <CalendarMonthIcon sx={{ mr: 1.5, color: 'primary.main' }} />
+            <Typography variant="h6" component="h2" sx={{ fontWeight: '600' }}>
               Timecard Calendar
             </Typography>
           </Box>
@@ -90,29 +86,20 @@ const TimecardCalendar = ({ onDayClick, onBatchAddClick }) => {
           </Typography>
         </Box>
         <Box>
-          <Button variant="outlined" sx={{ mr: 1 }} onClick={onBatchAddClick}>
+          <Button variant="outlined" sx={{ mr: 1, textTransform: 'none', color: 'text.primary', borderColor: '#334155' }} onClick={onBatchAddClick}>
             Batch Add
           </Button>
-          <Button variant="contained" startIcon={<SendIcon />}>
+          <Button variant="contained" startIcon={<SendIcon />} sx={{ textTransform: 'none' }}>
             Submit Timecard
           </Button>
         </Box>
       </Box>
-      <Grid container columns={7}>
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <Grid item xs={1} key={day} sx={{ textAlign: 'center', fontWeight: 'bold', py: 1, backgroundColor: 'grey.100' }}>
-            <Typography variant="body2">{day}</Typography>
-          </Grid>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(15, 1fr)', height: '100px', gap: '2px' }}>
+        {/* Simplified grid */}
+        {calendarData.slice(0, 30).map(day => (
+            <Day key={day.day} dayInfo={day} onClick={() => onDayClick(day)} />
         ))}
-        {Array.from({ length: 5 }).map((_, i) => ( // Placeholder for empty days
-          <Grid item xs={1} key={`empty-${i}`} sx={{ height: 120, border: '1px solid #e0e0e0', backgroundColor: 'grey.50' }} />
-        ))}
-        {calendarData.map(day => (
-          <Grid item xs={1} key={day.day}>
-            <Day dayInfo={day} onClick={() => onDayClick(day)} />
-          </Grid>
-        ))}
-      </Grid>
+      </Box>
     </Paper>
   );
 };
